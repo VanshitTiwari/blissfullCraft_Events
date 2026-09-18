@@ -1,0 +1,21 @@
+{
+  "name": "blisscraft-events",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Full-stack event organiser website for BlissCraft Events",
+  "scripts": {
+    "dev": "concurrently -n api,web -c cyan,magenta \"npm run server\" \"npm run client\"",
+    "server": "node server/index.js",
+    "client": "npm.cmd --prefix ./client run dev",
+    "install:all": "npm install && npm install --prefix client",
+    "build": "npm run build --prefix client"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
