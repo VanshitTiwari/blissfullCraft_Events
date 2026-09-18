@@ -9,8 +9,21 @@ const app = express();
 
 const PORT = process.env.PORT || 5050;
 
+// JWT secret:
+// - Local development can use the fallback secret.
+// - Production MUST provide JWT_SECRET as an environment variable.
 const JWT_SECRET =
-  process.env.JWT_SECRET || "blisscraft-events-local-secret";
+  process.env.JWT_SECRET ||
+  (process.env.NODE_ENV === "production"
+    ? null
+    : "blisscraft-events-local-secret");
+
+if (!JWT_SECRET) {
+  console.error(
+    "ERROR: JWT_SECRET environment variable is required in production."
+  );
+  process.exit(1);
+}
 
 app.use(cors());
 app.use(express.json());
@@ -63,7 +76,9 @@ app.get("/api/events", (req, res) => {
   let events = read().events;
 
   if (status) {
-    events = events.filter((event) => event.status === status);
+    events = events.filter(
+      (event) => event.status === status
+    );
   }
 
   events = [...events].sort((a, b) =>
@@ -179,66 +194,74 @@ app.get("/api/admin/inquiries", auth, (_req, res) => {
   res.json(read().inquiries);
 });
 
-app.patch("/api/admin/inquiries/:inquiryId", auth, (req, res) => {
-  const db = read();
+app.patch(
+  "/api/admin/inquiries/:inquiryId",
+  auth,
+  (req, res) => {
+    const db = read();
 
-  const inquiry = db.inquiries.find(
-    (item) => item.id === req.params.inquiryId
-  );
+    const inquiry = db.inquiries.find(
+      (item) => item.id === req.params.inquiryId
+    );
 
-  if (!inquiry) {
-    return res.status(404).json({
-      error: "Inquiry not found."
+    if (!inquiry) {
+      return res.status(404).json({
+        error: "Inquiry not found."
+      });
+    }
+
+    const allowed = [
+      "new",
+      "reviewing",
+      "quoted",
+      "booked",
+      "closed"
+    ];
+
+    if (
+      req.body.status &&
+      !allowed.includes(req.body.status)
+    ) {
+      return res.status(400).json({
+        error: "Invalid status."
+      });
+    }
+
+    if (req.body.status) {
+      inquiry.status = req.body.status;
+    }
+
+    write(db);
+
+    res.json(inquiry);
+  }
+);
+
+app.delete(
+  "/api/admin/inquiries/:inquiryId",
+  auth,
+  (req, res) => {
+    const db = read();
+
+    const next = db.inquiries.filter(
+      (item) => item.id !== req.params.inquiryId
+    );
+
+    if (next.length === db.inquiries.length) {
+      return res.status(404).json({
+        error: "Inquiry not found."
+      });
+    }
+
+    db.inquiries = next;
+
+    write(db);
+
+    res.json({
+      ok: true
     });
   }
-
-  const allowed = [
-    "new",
-    "reviewing",
-    "quoted",
-    "booked",
-    "closed"
-  ];
-
-  if (
-    req.body.status &&
-    !allowed.includes(req.body.status)
-  ) {
-    return res.status(400).json({
-      error: "Invalid status."
-    });
-  }
-
-  if (req.body.status) {
-    inquiry.status = req.body.status;
-  }
-
-  write(db);
-
-  res.json(inquiry);
-});
-
-app.delete("/api/admin/inquiries/:inquiryId", auth, (req, res) => {
-  const db = read();
-
-  const next = db.inquiries.filter(
-    (item) => item.id !== req.params.inquiryId
-  );
-
-  if (next.length === db.inquiries.length) {
-    return res.status(404).json({
-      error: "Inquiry not found."
-    });
-  }
-
-  db.inquiries = next;
-
-  write(db);
-
-  res.json({
-    ok: true
-  });
-});
+);
 
 app.post("/api/admin/events", auth, (req, res) => {
   const {
@@ -268,9 +291,10 @@ app.post("/api/admin/events", auth, (req, res) => {
 
     type: String(type || "Wedding").trim(),
 
-    status: status === "past"
-      ? "past"
-      : "upcoming",
+    status:
+      status === "past"
+        ? "past"
+        : "upcoming",
 
     date: String(date).trim(),
 
@@ -294,69 +318,77 @@ app.post("/api/admin/events", auth, (req, res) => {
   res.status(201).json(event);
 });
 
-app.put("/api/admin/events/:eventId", auth, (req, res) => {
-  const db = read();
+app.put(
+  "/api/admin/events/:eventId",
+  auth,
+  (req, res) => {
+    const db = read();
 
-  const event = db.events.find(
-    (item) => item.id === req.params.eventId
-  );
+    const event = db.events.find(
+      (item) => item.id === req.params.eventId
+    );
 
-  if (!event) {
-    return res.status(404).json({
-      error: "Event not found."
-    });
-  }
-
-  const fields = [
-    "title",
-    "type",
-    "status",
-    "date",
-    "location",
-    "capacity",
-    "image",
-    "summary",
-    "description"
-  ];
-
-  for (const field of fields) {
-    if (req.body[field] !== undefined) {
-      event[field] = req.body[field];
+    if (!event) {
+      return res.status(404).json({
+        error: "Event not found."
+      });
     }
+
+    const fields = [
+      "title",
+      "type",
+      "status",
+      "date",
+      "location",
+      "capacity",
+      "image",
+      "summary",
+      "description"
+    ];
+
+    for (const field of fields) {
+      if (req.body[field] !== undefined) {
+        event[field] = req.body[field];
+      }
+    }
+
+    if (event.status !== "past") {
+      event.status = "upcoming";
+    }
+
+    event.capacity = Number(event.capacity) || 0;
+
+    write(db);
+
+    res.json(event);
   }
+);
 
-  if (event.status !== "past") {
-    event.status = "upcoming";
-  }
+app.delete(
+  "/api/admin/events/:eventId",
+  auth,
+  (req, res) => {
+    const db = read();
 
-  event.capacity = Number(event.capacity) || 0;
+    const next = db.events.filter(
+      (event) => event.id !== req.params.eventId
+    );
 
-  write(db);
+    if (next.length === db.events.length) {
+      return res.status(404).json({
+        error: "Event not found."
+      });
+    }
 
-  res.json(event);
-});
+    db.events = next;
 
-app.delete("/api/admin/events/:eventId", auth, (req, res) => {
-  const db = read();
+    write(db);
 
-  const next = db.events.filter(
-    (event) => event.id !== req.params.eventId
-  );
-
-  if (next.length === db.events.length) {
-    return res.status(404).json({
-      error: "Event not found."
+    res.json({
+      ok: true
     });
   }
-
-  db.events = next;
-
-  write(db);
-
-  res.json({
-    ok: true
-  });
-});
+);
 
 const clientDist = path.join(
   __dirname,
