@@ -11,13 +11,16 @@ export default function Layout() {
   return (
     <>
       <header className="site-header">
-        <NavLink to="/" className="brand">
-          <span className="brand-mark">B</span>
-
-          <span>
-            BlissCraft
-            <small>Events</small>
-          </span>
+        <NavLink
+          to="/"
+          className="brand"
+          aria-label="BlissCraft Events"
+        >
+          <img
+            src="/blisscraft-logo.png"
+            alt="BlissCraft Events"
+            className="site-logo"
+          />
         </NavLink>
 
         <nav className="nav">
@@ -38,27 +41,49 @@ export default function Layout() {
 
       <footer className="site-footer">
         <div className="footer-grid">
+
           <div>
-            <p className="brand-word">BlissCraft Events</p>
+            <p className="brand-word">
+              BlissCraft Events
+            </p>
 
             <p className="muted">
-              Event planning and celebration services for weddings, birthdays,
-              kitty parties, and all kinds of special occasions.
+              Elegant event decoration for birthdays, kitty parties,
+              wedding functions, and all kinds of special celebrations
+              in Lucknow.
             </p>
           </div>
 
           <div>
-            <p className="footer-label">Serving</p>
+            <p className="footer-label">
+              Serving
+            </p>
 
-            <p>Lucknow · Kanpur</p>
-            <p>Banaras · Raebareli</p>
+            <p>
+              Gomti Nagar · Hazratganj
+            </p>
+
+            <p>
+              Aliganj · Indira Nagar
+            </p>
+
+            <p>
+              Alambagh · Lucknow
+            </p>
           </div>
 
           <div>
-            <p className="footer-label">Contact</p>
+            <p className="footer-label">
+              Contact
+            </p>
 
-            <p>7080358105</p>
-            <p>9696447441</p>
+            <p>
+              7080358105
+            </p>
+
+            <p>
+              9696447441
+            </p>
 
             <a
               href="https://www.instagram.com/solosiren/"
@@ -70,16 +95,23 @@ export default function Layout() {
           </div>
 
           <div>
-            <p className="footer-label">Visit</p>
-
-            <p>
-              <NavLink to="/contact">Start an enquiry</NavLink>
+            <p className="footer-label">
+              Visit
             </p>
 
             <p>
-              <NavLink to="/admin">Client / admin</NavLink>
+              <NavLink to="/contact">
+                Start an enquiry
+              </NavLink>
+            </p>
+
+            <p>
+              <NavLink to="/admin">
+                Client / admin
+              </NavLink>
             </p>
           </div>
+
         </div>
 
         <p className="legal">

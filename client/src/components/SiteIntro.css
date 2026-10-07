@@ -1,0 +1,442 @@
+/* =========================================================
+   BLISSCRAFT EVENTS
+   FULL SCREEN CINEMATIC INTRO
+========================================================= */
+
+.site-intro {
+    position: fixed;
+    inset: 0;
+  
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+  
+    z-index: 999999;
+  
+    overflow: hidden;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    background: #f6f1e8;
+  
+    isolation: isolate;
+  
+    transform: translate3d(0, 0, 0);
+  
+    transition:
+      transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+  }
+  
+  
+  /* =========================================================
+     BACKGROUND
+  ========================================================= */
+  
+  .intro-background {
+    position: absolute;
+    inset: 0;
+  
+    z-index: -1;
+  
+    background:
+      radial-gradient(
+        circle at 50% 45%,
+        rgba(176, 138, 74, 0.12),
+        transparent 32%
+      ),
+      radial-gradient(
+        circle at 50% 50%,
+        rgba(122, 46, 42, 0.04),
+        transparent 65%
+      ),
+      #f6f1e8;
+  }
+  
+  
+  /* =========================================================
+     CONTENT
+  ========================================================= */
+  
+  .intro-content {
+    position: relative;
+  
+    width: 100%;
+    height: 100%;
+  
+    display: flex;
+    flex-direction: column;
+  
+    align-items: center;
+    justify-content: center;
+  
+    box-sizing: border-box;
+  
+    padding: 30px;
+  }
+  
+  
+  /* =========================================================
+     LOGO CONTAINER
+  
+     IMPORTANT:
+     The logo itself is strictly limited in size.
+  ========================================================= */
+  
+  .intro-logo-wrap {
+    position: relative;
+  
+    width: 420px;
+    max-width: 72vw;
+  
+    aspect-ratio: 1 / 1;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    perspective: 1200px;
+  
+    transform-style: preserve-3d;
+  
+    animation:
+      logoFloat 5s ease-in-out infinite;
+  }
+  
+  
+  /* =========================================================
+     LOGO SHADOW
+  ========================================================= */
+  
+  .intro-logo-shadow {
+    position: absolute;
+  
+    width: 72%;
+    height: 18%;
+  
+    bottom: 10%;
+  
+    left: 14%;
+  
+    border-radius: 50%;
+  
+    background: rgba(92, 32, 29, 0.15);
+  
+    filter: blur(22px);
+  
+    transform:
+      translateZ(-40px)
+      scaleX(0.85);
+  
+    animation:
+      shadowFloat 5s ease-in-out infinite;
+  }
+  
+  
+  /* =========================================================
+     MAIN LOGO
+  ========================================================= */
+  
+  .intro-logo {
+    position: relative;
+  
+    display: block;
+  
+    width: 100%;
+    max-width: 420px;
+  
+    height: auto;
+  
+    margin: 0;
+    padding: 0;
+  
+    object-fit: contain;
+  
+    transform:
+      perspective(1200px)
+      rotateX(2deg)
+      rotateY(-3deg)
+      translateZ(25px);
+  
+    transform-style: preserve-3d;
+  
+    filter:
+      drop-shadow(
+        0 18px 18px rgba(92, 32, 29, 0.14)
+      )
+      drop-shadow(
+        0 30px 35px rgba(92, 32, 29, 0.07)
+      );
+  
+    animation:
+      logoTilt 7s ease-in-out infinite;
+  
+    user-select: none;
+  }
+  
+  
+  /* =========================================================
+     FLOATING MOTION
+  ========================================================= */
+  
+  @keyframes logoFloat {
+    0% {
+      transform:
+        translateY(8px)
+        rotateZ(-0.4deg);
+    }
+  
+    50% {
+      transform:
+        translateY(-12px)
+        rotateZ(0.4deg);
+    }
+  
+    100% {
+      transform:
+        translateY(8px)
+        rotateZ(-0.4deg);
+    }
+  }
+  
+  
+  /* =========================================================
+     3D TILT
+  ========================================================= */
+  
+  @keyframes logoTilt {
+    0% {
+      transform:
+        perspective(1200px)
+        rotateX(2deg)
+        rotateY(-3deg)
+        translateZ(25px);
+    }
+  
+    50% {
+      transform:
+        perspective(1200px)
+        rotateX(-2deg)
+        rotateY(4deg)
+        translateZ(35px);
+    }
+  
+    100% {
+      transform:
+        perspective(1200px)
+        rotateX(2deg)
+        rotateY(-3deg)
+        translateZ(25px);
+    }
+  }
+  
+  
+  /* =========================================================
+     SHADOW MOTION
+  ========================================================= */
+  
+  @keyframes shadowFloat {
+    0% {
+      transform:
+        translateZ(-40px)
+        scaleX(0.9);
+  
+      opacity: 0.13;
+    }
+  
+    50% {
+      transform:
+        translateZ(-40px)
+        scaleX(0.72);
+  
+      opacity: 0.07;
+    }
+  
+    100% {
+      transform:
+        translateZ(-40px)
+        scaleX(0.9);
+  
+      opacity: 0.13;
+    }
+  }
+  
+  
+  /* =========================================================
+     DOWN ARROW
+  ========================================================= */
+  
+  .intro-scroll-button {
+    position: absolute;
+  
+    left: 50%;
+  
+    bottom: 45px;
+  
+    transform: translateX(-50%);
+  
+    width: 55px;
+    height: 65px;
+  
+    padding: 0;
+  
+    border: 0;
+  
+    background: transparent;
+  
+    cursor: pointer;
+  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  
+    color: #7a2e2a;
+  }
+  
+  
+  .intro-scroll-line {
+    width: 1px;
+    height: 24px;
+  
+    background:
+      linear-gradient(
+        to bottom,
+        transparent,
+        #b08a4a
+      );
+  }
+  
+  
+  .intro-scroll-arrow {
+    display: block;
+  
+    margin-top: -2px;
+  
+    font-family: Arial, sans-serif;
+  
+    font-size: 29px;
+  
+    font-weight: 300;
+  
+    line-height: 1;
+  
+    color: #7a2e2a;
+  
+    animation:
+      arrowFloat 1.8s ease-in-out infinite;
+  
+    transition:
+      transform 0.3s ease;
+  }
+  
+  
+  .intro-scroll-button:hover .intro-scroll-arrow {
+    transform: translateY(6px);
+  }
+  
+  
+  @keyframes arrowFloat {
+    0%,
+    100% {
+      transform: translateY(0);
+  
+      opacity: 0.65;
+    }
+  
+    50% {
+      transform: translateY(6px);
+  
+      opacity: 1;
+    }
+  }
+  
+  
+  /* =========================================================
+     EXIT
+  ========================================================= */
+  
+  .site-intro-exiting {
+    transform:
+      translate3d(0, -105%, 0);
+  
+    pointer-events: none;
+  }
+  
+  
+  /* Stop logo animation during exit */
+  
+  .site-intro-exiting .intro-logo-wrap {
+    animation: none;
+  
+    transform:
+      translateY(-20px)
+      scale(1.02);
+  
+    transition:
+      transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+  }
+  
+  
+  .site-intro-exiting .intro-logo {
+    animation: none;
+  }
+  
+  
+  .site-intro-exiting .intro-scroll-button {
+    opacity: 0;
+  
+    transition:
+      opacity 0.35s ease;
+  }
+  
+  
+  /* =========================================================
+     MOBILE
+  ========================================================= */
+  
+  @media (max-width: 700px) {
+    .intro-logo-wrap {
+      width: 340px;
+      max-width: 78vw;
+    }
+  
+    .intro-scroll-button {
+      bottom: 28px;
+    }
+  }
+  
+  
+  /* =========================================================
+     VERY SMALL PHONES
+  ========================================================= */
+  
+  @media (max-width: 420px) {
+    .intro-logo-wrap {
+      width: 300px;
+      max-width: 82vw;
+    }
+  
+    .intro-scroll-button {
+      bottom: 22px;
+    }
+  }
+  
+  
+  /* =========================================================
+     REDUCED MOTION
+  ========================================================= */
+  
+  @media (prefers-reduced-motion: reduce) {
+    .intro-logo-wrap,
+    .intro-logo,
+    .intro-logo-shadow,
+    .intro-scroll-arrow {
+      animation: none;
+    }
+  
+    .site-intro {
+      transition-duration: 0.5s;
+    }
+  }

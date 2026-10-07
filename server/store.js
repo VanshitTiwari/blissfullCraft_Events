@@ -41,90 +41,80 @@ function id() {
 
 function createSeed() {
   return {
-    admin: {
-      email: "admin@blisscraft.events",
-      password: "blisscraft2026"
-    },
 
     services: [
       {
-        id: "weddings",
-        title: "Weddings",
-        subtitle: "Beautifully planned wedding celebrations",
+        id: "wedding-functions",
+        title: "Wedding Functions",
+        subtitle: "Beautiful decoration for your special functions",
         description:
-          "From intimate ceremonies to grand celebrations, BlissCraft Events helps bring your wedding vision together with thoughtful planning and attention to detail.",
+          "BlissCraft Events creates elegant decoration setups for Haldi, Mehndi, Sangeet, Engagement, and other wedding functions, designed around your theme and celebration.",
         includes: [
-          "Wedding planning and coordination",
-          "Theme and celebration concepts",
-          "Venue and setup coordination",
-          "Decor and event arrangements",
-          "Guest experience planning"
+          "Haldi decoration",
+          "Mehndi decoration",
+          "Sangeet decoration",
+          "Engagement decoration",
+          "Theme-based decor and setup"
         ]
       },
 
       {
-        id: "birthdays",
-        title: "Birthdays",
-        subtitle: "Make every birthday worth remembering",
+        id: "birthday-decoration",
+        title: "Birthday Decoration",
+        subtitle: "Make every birthday look unforgettable",
         description:
-          "Celebrate another wonderful year with a birthday experience designed around your personality, preferences, and the people who matter most.",
+          "Beautiful birthday decoration created around your preferred theme, colours, and personal style.",
         includes: [
-          "Birthday party planning",
-          "Theme and decoration ideas",
-          "Venue and setup arrangements",
-          "Party coordination",
-          "Special touches and finishing details"
+          "Birthday backdrop decoration",
+          "Theme-based decoration",
+          "Balloon and floral decor",
+          "Cake table decoration",
+          "Personalised decorative details"
         ]
       },
 
       {
-        id: "kitty-parties",
-        title: "Kitty Parties",
-        subtitle: "Fun gatherings with thoughtful details",
+        id: "kitty-party-decoration",
+        title: "Kitty Party Decoration",
+        subtitle: "Beautiful setups for memorable gatherings",
         description:
-          "BlissCraft Events helps create enjoyable kitty parties with attractive setups, smooth arrangements, and a celebration your guests can enjoy.",
+          "Attractive and lively decoration setups for kitty parties, created to make every gathering feel special.",
         includes: [
-          "Kitty party planning",
-          "Theme and decoration arrangements",
-          "Venue setup",
-          "Guest arrangements",
-          "Event-day coordination"
+          "Theme-based kitty party decor",
+          "Table and backdrop decoration",
+          "Balloon and floral arrangements",
+          "Photo corner decoration",
+          "Finishing decorative details"
         ]
       },
 
       {
-        id: "all-parties",
+        id: "all-kinds-of-parties",
         title: "All Kinds of Parties",
-        subtitle: "Your occasion, your way",
+        subtitle: "Your celebration, beautifully decorated",
         description:
-          "Whether you are planning an intimate gathering, a family celebration, or a lively party, we help turn your ideas into a memorable occasion.",
+          "Creative decoration for all kinds of parties, family celebrations, intimate gatherings, and special occasions according to your theme and preferences.",
         includes: [
-          "Party planning and coordination",
-          "Theme and decoration concepts",
-          "Venue and setup arrangements",
-          "Celebration planning",
-          "Event-day coordination"
+          "Party theme decoration",
+          "Backdrop decoration",
+          "Balloon and floral arrangements",
+          "Table and venue decor",
+          "Creative decorative details"
         ]
       }
     ],
 
-    /*
-      Real client testimonials can be added later.
-      We are keeping this empty instead of inventing reviews.
-    */
+    // Real client testimonials can be added later.
+    // We are keeping this empty instead of inventing reviews.
     testimonials: [],
 
-    /*
-      Real client/event photographs can be added later.
-      We are keeping this empty instead of presenting stock
-      photographs as BlissCraft Events' actual work.
-    */
+    // Real client/event photographs can be added later.
+    // We are keeping this empty instead of presenting stock
+    // photographs as BlissCraft Events' actual work.
     gallery: [],
 
-    /*
-      Real events can be added from the Admin Dashboard.
-      We are keeping this empty instead of inventing client events.
-    */
+    // Real events can be added from the Admin Dashboard.
+    // We are keeping this empty instead of inventing client events.
     events: [],
 
     inquiries: []

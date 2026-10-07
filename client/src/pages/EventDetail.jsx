@@ -25,12 +25,14 @@ export default function EventDetail() {
   if (error) {
     return (
       <section className="section page">
-        <p className="eyebrow">Event</p>
-        <h1>We couldn't find this event.</h1>
+        <p className="eyebrow">Our Work</p>
+
+        <h1>We couldn't find this celebration.</h1>
+
         <p>{error}</p>
 
         <Link className="btn" to="/events">
-          Back to events
+          Back to our work
         </Link>
       </section>
     );
@@ -67,7 +69,7 @@ export default function EventDetail() {
       <p>{event.description}</p>
 
       <Link className="btn" to="/contact">
-        Plan a similar celebration
+        Enquire for similar decoration
       </Link>
     </article>
   );

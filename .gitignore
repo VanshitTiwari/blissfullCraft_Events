@@ -3,3 +3,6 @@ client/node_modules/
 client/dist/
 server/data/
 .DS_Store
+.env
+.env.*
+!.env.example

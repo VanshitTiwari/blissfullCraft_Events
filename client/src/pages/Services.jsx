@@ -4,58 +4,58 @@ export default function Services() {
   const services = [
     {
       id: 1,
-      title: "Weddings",
-      subtitle: "Beautifully planned wedding celebrations",
+      title: "Wedding Functions",
+      subtitle: "Beautiful decoration for your special functions",
       description:
-        "From intimate ceremonies to grand celebrations, BlissCraft Events helps bring your wedding vision together with thoughtful planning and attention to detail.",
+        "BlissCraft Events creates elegant decoration setups for Haldi, Mehndi, Sangeet, Engagement, and other wedding functions, designed around your theme and celebration.",
       includes: [
-        "Wedding planning and coordination",
-        "Theme and celebration concepts",
-        "Venue and setup coordination",
-        "Decor and event arrangements",
-        "Guest experience planning"
+        "Haldi decoration",
+        "Mehndi decoration",
+        "Sangeet decoration",
+        "Engagement decoration",
+        "Theme-based decor and setup"
       ]
     },
     {
       id: 2,
-      title: "Birthdays",
-      subtitle: "Make every birthday worth remembering",
+      title: "Birthday Decoration",
+      subtitle: "Make every birthday look unforgettable",
       description:
-        "Celebrate another wonderful year with a birthday experience designed around your personality, preferences, and the people who matter most.",
+        "Celebrate another wonderful year with a beautiful birthday setup created around your preferred theme, colours, and personal style.",
       includes: [
-        "Birthday party planning",
-        "Theme and decoration ideas",
-        "Venue and setup arrangements",
-        "Party coordination",
-        "Special touches and finishing details"
+        "Birthday backdrop decoration",
+        "Theme-based decoration",
+        "Balloon and floral decor",
+        "Cake table decoration",
+        "Personalised decorative details"
       ]
     },
     {
       id: 3,
-      title: "Kitty Parties",
-      subtitle: "Fun gatherings with thoughtful details",
+      title: "Kitty Party Decoration",
+      subtitle: "Beautiful setups for memorable gatherings",
       description:
-        "BlissCraft Events helps create enjoyable kitty parties with attractive setups, smooth arrangements, and a celebration your guests can enjoy.",
+        "BlissCraft Events creates attractive and lively decoration setups for kitty parties, with details that make the gathering feel special.",
       includes: [
-        "Kitty party planning",
-        "Theme and decoration arrangements",
-        "Venue setup",
-        "Guest arrangements",
-        "Event-day coordination"
+        "Theme-based kitty party decor",
+        "Table and backdrop decoration",
+        "Balloon and floral arrangements",
+        "Photo corner decoration",
+        "Finishing decorative details"
       ]
     },
     {
       id: 4,
       title: "All Kinds of Parties",
-      subtitle: "Your occasion, your way",
+      subtitle: "Your celebration, beautifully decorated",
       description:
-        "Whether you are planning an intimate gathering, a family celebration, or a lively party, we help turn your ideas into a memorable occasion.",
+        "From intimate gatherings to lively celebrations, we create decoration setups for all kinds of parties according to your occasion, theme, and preferences.",
       includes: [
-        "Party planning and coordination",
-        "Theme and decoration concepts",
-        "Venue and setup arrangements",
-        "Entertainment and celebration planning",
-        "Event-day coordination"
+        "Party theme decoration",
+        "Backdrop decoration",
+        "Balloon and floral arrangements",
+        "Table and venue decor",
+        "Creative decorative details"
       ]
     }
   ];
@@ -65,12 +65,13 @@ export default function Services() {
       <div className="section-head">
         <p className="eyebrow">Services</p>
 
-        <h1>Celebrations planned around you.</h1>
+        <h1>Beautiful decoration for every celebration.</h1>
 
         <p className="lede narrow">
-          Every celebration is different. BlissCraft Events helps you plan and
-          organise your special occasions with thoughtful ideas, beautiful
-          details, and careful coordination.
+          BlissCraft Events specialises in event decoration across Lucknow.
+          From birthdays and kitty parties to Haldi, Mehndi, Sangeet,
+          Engagements, and other celebrations, we create beautiful setups
+          tailored to your occasion and style.
         </p>
       </div>
 
@@ -95,7 +96,7 @@ export default function Services() {
       </div>
 
       <Link className="btn" to="/contact">
-        Plan your celebration
+        Enquire for decoration
       </Link>
     </section>
   );

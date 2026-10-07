@@ -25,14 +25,15 @@ export default function Events() {
   return (
     <section className="section page">
       <div className="section-head">
-        <p className="eyebrow">Events</p>
+        <p className="eyebrow">Our Work</p>
 
-        <h1>Celebrations worth remembering.</h1>
+        <h1>Celebrations beautifully decorated.</h1>
 
         <p className="lede narrow">
-          Explore celebrations and occasions organised through BlissCraft
-          Events. Each event is shaped around the people, place, and moments
-          that make it special.
+          Explore decoration work by BlissCraft Events across Lucknow.
+          From birthdays and kitty parties to wedding functions and other
+          special celebrations, each setup is created with thoughtful
+          details and a style of its own.
         </p>
       </div>
 

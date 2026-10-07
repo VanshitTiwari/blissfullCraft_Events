@@ -24,23 +24,28 @@ export default function Home() {
 
   return (
     <>
+      {/* HERO */}
       <section className="hero">
         <div className="hero-copy">
           <p className="eyebrow">
-            Event organisers · Lucknow · Kanpur · Banaras · Raebareli
+            Event decoration · Lucknow · Gomti Nagar · Hazratganj · Aliganj ·
+            Indira Nagar · Alambagh
           </p>
 
-          <h1>Beautiful occasions, thoughtfully brought to life.</h1>
+          <h1>
+            Beautiful celebrations, beautifully decorated.
+          </h1>
 
           <p className="lede">
-            BlissCraft Events creates memorable celebrations with thoughtful
-            planning, elegant details, and seamless execution — from the first
-            idea to the final guest departure.
+            BlissCraft Events creates elegant and memorable decorations for
+            birthdays, kitty parties, wedding functions, and all kinds of
+            special celebrations across Lucknow — bringing your vision to life
+            with care, creativity, and attention to detail.
           </p>
 
           <div className="hero-actions">
             <Link className="btn" to="/contact">
-              Plan an event
+              Enquire for decoration
             </Link>
 
             <Link className="btn ghost" to="/gallery">
@@ -52,58 +57,62 @@ export default function Home() {
         <div className="hero-frame">
           <img
             src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1400&q=80"
-            alt="Elegant wedding celebration"
+            alt="Elegant wedding decoration"
           />
 
           <p className="caption">
-            BlissCraft Events · Celebrations crafted with care
+            BlissCraft Events · Decorations crafted with care
           </p>
         </div>
       </section>
 
+      {/* SERVICE HIGHLIGHTS */}
       <section className="band">
         <div className="stats">
           <div>
-            <strong>4</strong>
-            <span>cities we serve</span>
+            <strong>Lucknow</strong>
+            <span>our service location</span>
           </div>
 
           <div>
             <strong>4</strong>
-            <span>ways to celebrate</span>
+            <span>decoration categories</span>
           </div>
 
           <div>
             <strong>1</strong>
-            <span>dedicated approach</span>
+            <span>creative approach</span>
           </div>
         </div>
       </section>
 
+      {/* SERVICES */}
       <section className="section">
         <div className="section-head">
-          <p className="eyebrow">What we create</p>
+          <p className="eyebrow">What we decorate</p>
 
-          <h2>Celebrations made for your moments.</h2>
+          <h2>
+            Décor designed around your celebration.
+          </h2>
         </div>
 
         <div className="card-grid four">
           {[
             [
-              "Weddings",
-              "Thoughtfully planned wedding celebrations with elegant details and a smooth experience for you and your guests."
+              "Birthday Decoration",
+              "Beautiful birthday setups created around your theme, occasion, and personal style."
             ],
             [
-              "Birthdays",
-              "Memorable birthday celebrations designed around your occasion, personality, and vision."
+              "Kitty Party Decoration",
+              "Elegant and lively decoration setups that make every kitty party feel special."
             ],
             [
-              "Kitty Parties",
-              "Fun and beautifully arranged kitty parties planned to create an enjoyable experience for every guest."
+              "Wedding Functions",
+              "Decoration for Haldi, Mehndi, Sangeet, Engagement, and other wedding functions."
             ],
             [
               "All Kinds of Parties",
-              "From intimate gatherings to lively celebrations, we help bring your ideas together with care and creativity."
+              "Creative decoration for intimate gatherings, family celebrations, and all kinds of parties."
             ]
           ].map(([title, text]) => (
             <article key={title} className="card">
@@ -114,10 +123,11 @@ export default function Home() {
         </div>
 
         <Link className="text-link" to="/services">
-          Explore services →
+          Explore decoration services →
         </Link>
       </section>
 
+      {/* UPCOMING EVENTS */}
       <section className="section">
         <div className="section-head">
           <p className="eyebrow">Diary</p>
@@ -152,6 +162,7 @@ export default function Home() {
         </Link>
       </section>
 
+      {/* TESTIMONIALS */}
       <section className="section quotes">
         <div className="section-head">
           <p className="eyebrow">Clients</p>

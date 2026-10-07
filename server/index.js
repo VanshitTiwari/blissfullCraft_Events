@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
@@ -9,14 +10,30 @@ const app = express();
 
 const PORT = process.env.PORT || 5050;
 
-// JWT secret:
-// - Local development can use the fallback secret.
-// - Production MUST provide JWT_SECRET as an environment variable.
+/* -----------------------------
+   Environment configuration
+----------------------------- */
+
+const IS_PRODUCTION =
+  process.env.NODE_ENV === "production";
+
 const JWT_SECRET =
   process.env.JWT_SECRET ||
-  (process.env.NODE_ENV === "production"
+  (IS_PRODUCTION
     ? null
     : "blisscraft-events-local-secret");
+
+const ADMIN_EMAIL =
+  process.env.ADMIN_EMAIL ||
+  (IS_PRODUCTION
+    ? null
+    : "admin@blisscraft.events");
+
+const ADMIN_PASSWORD =
+  process.env.ADMIN_PASSWORD ||
+  (IS_PRODUCTION
+    ? null
+    : "blisscraft2026");
 
 if (!JWT_SECRET) {
   console.error(
@@ -25,8 +42,30 @@ if (!JWT_SECRET) {
   process.exit(1);
 }
 
+if (!ADMIN_EMAIL) {
+  console.error(
+    "ERROR: ADMIN_EMAIL environment variable is required in production."
+  );
+  process.exit(1);
+}
+
+if (!ADMIN_PASSWORD) {
+  console.error(
+    "ERROR: ADMIN_PASSWORD environment variable is required in production."
+  );
+  process.exit(1);
+}
+
+/* -----------------------------
+   Middleware
+----------------------------- */
+
 app.use(cors());
 app.use(express.json());
+
+/* -----------------------------
+   Authentication
+----------------------------- */
 
 function auth(req, res, next) {
   const header = req.headers.authorization || "";
@@ -50,6 +89,48 @@ function auth(req, res, next) {
     });
   }
 }
+
+/* -----------------------------
+   Validation helpers
+----------------------------- */
+
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+}
+
+function isValidIndianPhone(phone) {
+  if (!/^[6-9]\d{9}$/.test(phone)) {
+    return false;
+  }
+
+  if (/^(\d)\1{9}$/.test(phone)) {
+    return false;
+  }
+
+  return true;
+}
+
+function isValidDate(date) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return false;
+  }
+
+  const selected = new Date(`${date}T00:00:00`);
+
+  if (Number.isNaN(selected.getTime())) {
+    return false;
+  }
+
+  const today = new Date();
+
+  today.setHours(0, 0, 0, 0);
+
+  return selected >= today;
+}
+
+/* -----------------------------
+   Public API
+----------------------------- */
 
 app.get("/api/health", (_req, res) => {
   res.json({
@@ -102,6 +183,10 @@ app.get("/api/events/:eventId", (req, res) => {
   res.json(event);
 });
 
+/* -----------------------------
+   Customer enquiries
+----------------------------- */
+
 app.post("/api/inquiries", (req, res) => {
   const {
     name,
@@ -113,9 +198,94 @@ app.post("/api/inquiries", (req, res) => {
     message
   } = req.body || {};
 
-  if (!name || !email || !message) {
+  const cleanName = String(name || "").trim();
+  const cleanEmail = String(email || "")
+    .trim()
+    .toLowerCase();
+  const cleanPhone = String(phone || "").trim();
+  const cleanEventType = String(eventType || "").trim();
+  const cleanDate = String(date || "").trim();
+  const cleanGuests = String(guests || "").trim();
+  const cleanMessage = String(message || "").trim();
+
+  if (!cleanName) {
     return res.status(400).json({
-      error: "Name, email, and a short brief are required."
+      error: "Please enter your name."
+    });
+  }
+
+  if (cleanName.length < 2 || cleanName.length > 80) {
+    return res.status(400).json({
+      error: "Name must be between 2 and 80 characters."
+    });
+  }
+
+  if (!/[A-Za-z]/.test(cleanName)) {
+    return res.status(400).json({
+      error: "Please enter a valid name."
+    });
+  }
+
+  if (!isValidEmail(cleanEmail)) {
+    return res.status(400).json({
+      error: "Please enter a valid email address."
+    });
+  }
+
+  if (!isValidIndianPhone(cleanPhone)) {
+    return res.status(400).json({
+      error:
+        "Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9."
+    });
+  }
+
+  const allowedEventTypes = [
+    "Wedding Function",
+    "Birthday Decoration",
+    "Kitty Party Decoration",
+    "All Kinds of Parties"
+  ];
+
+  if (!allowedEventTypes.includes(cleanEventType)) {
+    return res.status(400).json({
+      error: "Please select a valid decoration type."
+    });
+  }
+
+  if (!isValidDate(cleanDate)) {
+    return res.status(400).json({
+      error: "Please select today or a future date."
+    });
+  }
+
+  if (!/^\d+$/.test(cleanGuests)) {
+    return res.status(400).json({
+      error: "Guest count must contain numbers only."
+    });
+  }
+
+  const guestCount = Number(cleanGuests);
+
+  if (
+    !Number.isInteger(guestCount) ||
+    guestCount < 1 ||
+    guestCount > 1000
+  ) {
+    return res.status(400).json({
+      error: "Guest count must be between 1 and 1000."
+    });
+  }
+
+  if (cleanMessage.length < 10) {
+    return res.status(400).json({
+      error:
+        "Please provide a little more information about your decoration requirements."
+    });
+  }
+
+  if (cleanMessage.length > 1000) {
+    return res.status(400).json({
+      error: "Message must be 1000 characters or fewer."
     });
   }
 
@@ -123,13 +293,13 @@ app.post("/api/inquiries", (req, res) => {
 
   const inquiry = {
     id: id(),
-    name: String(name).trim(),
-    email: String(email).trim(),
-    phone: String(phone || "").trim(),
-    eventType: String(eventType || "Other").trim(),
-    date: String(date || "").trim(),
-    guests: String(guests || "").trim(),
-    message: String(message).trim(),
+    name: cleanName,
+    email: cleanEmail,
+    phone: cleanPhone,
+    eventType: cleanEventType,
+    date: cleanDate,
+    guests: String(guestCount),
+    message: cleanMessage,
     status: "new",
     createdAt: new Date().toISOString()
   };
@@ -144,14 +314,24 @@ app.post("/api/inquiries", (req, res) => {
   });
 });
 
-app.post("/api/auth/login", (req, res) => {
-  const { email, password } = req.body || {};
+/* -----------------------------
+   Admin authentication
+----------------------------- */
 
-  const db = read();
+app.post("/api/auth/login", (req, res) => {
+  const email = String(
+    req.body?.email || ""
+  )
+    .trim()
+    .toLowerCase();
+
+  const password = String(
+    req.body?.password || ""
+  );
 
   if (
-    email !== db.admin.email ||
-    password !== db.admin.password
+    email !== ADMIN_EMAIL.toLowerCase() ||
+    password !== ADMIN_PASSWORD
   ) {
     return res.status(401).json({
       error: "Incorrect email or password."
@@ -161,7 +341,7 @@ app.post("/api/auth/login", (req, res) => {
   const token = jwt.sign(
     {
       role: "admin",
-      email
+      email: ADMIN_EMAIL
     },
     JWT_SECRET,
     {
@@ -171,24 +351,35 @@ app.post("/api/auth/login", (req, res) => {
 
   res.json({
     token,
-    email
+    email: ADMIN_EMAIL
   });
 });
+
+/* -----------------------------
+   Admin statistics
+----------------------------- */
 
 app.get("/api/admin/stats", auth, (_req, res) => {
   const db = read();
 
   res.json({
     events: db.events.length,
+
     upcoming: db.events.filter(
       (event) => event.status === "upcoming"
     ).length,
+
     inquiries: db.inquiries.length,
+
     newInquiries: db.inquiries.filter(
       (inquiry) => inquiry.status === "new"
     ).length
   });
 });
+
+/* -----------------------------
+   Admin enquiries
+----------------------------- */
 
 app.get("/api/admin/inquiries", auth, (_req, res) => {
   res.json(read().inquiries);
@@ -263,6 +454,10 @@ app.delete(
   }
 );
 
+/* -----------------------------
+   Admin decoration work
+----------------------------- */
+
 app.post("/api/admin/events", auth, (req, res) => {
   const {
     title,
@@ -289,7 +484,9 @@ app.post("/api/admin/events", auth, (req, res) => {
 
     title: String(title).trim(),
 
-    type: String(type || "Wedding").trim(),
+    type: String(
+      type || "Wedding Function"
+    ).trim(),
 
     status:
       status === "past"
@@ -308,7 +505,9 @@ app.post("/api/admin/events", auth, (req, res) => {
 
     summary: String(summary || "").trim(),
 
-    description: String(description || "").trim()
+    description: String(
+      description || ""
+    ).trim()
   };
 
   db.events.unshift(event);
@@ -356,7 +555,8 @@ app.put(
       event.status = "upcoming";
     }
 
-    event.capacity = Number(event.capacity) || 0;
+    event.capacity =
+      Number(event.capacity) || 0;
 
     write(db);
 
@@ -390,6 +590,10 @@ app.delete(
   }
 );
 
+/* -----------------------------
+   Production frontend
+----------------------------- */
+
 const clientDist = path.join(
   __dirname,
   "..",
@@ -411,8 +615,12 @@ if (fs.existsSync(clientDist)) {
   });
 }
 
+/* -----------------------------
+   Start server
+----------------------------- */
+
 app.listen(PORT, () => {
   console.log(
-    `BlissCraft Events API running on http://localhost:${PORT}`
+    `BlissCraft Events API running on port ${PORT}`
   );
 });

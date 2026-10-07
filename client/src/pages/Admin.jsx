@@ -4,7 +4,7 @@ import { api, clearToken, getToken } from "../api.js";
 
 const emptyEvent = {
   title: "",
-  type: "Wedding",
+  type: "Wedding Function",
   status: "upcoming",
   date: "",
   location: "",
@@ -77,7 +77,12 @@ export default function Admin() {
 
       setForm(emptyEvent);
       setEditing(null);
-      setMessage("Event saved successfully.");
+
+      setMessage(
+        editing
+          ? "Decoration entry updated successfully."
+          : "Decoration entry created successfully."
+      );
 
       await load();
     } catch (err) {
@@ -104,7 +109,7 @@ export default function Admin() {
   }
 
   async function removeEvent(id) {
-    if (!confirm("Delete this event?")) {
+    if (!confirm("Delete this decoration entry?")) {
       return;
     }
 
@@ -161,7 +166,12 @@ export default function Admin() {
       <header className="admin-bar">
         <div>
           <p className="eyebrow">BlissCraft Events</p>
+
           <h1>Admin dashboard</h1>
+
+          <p className="muted">
+            Manage decoration work and customer enquiries.
+          </p>
         </div>
 
         <button className="btn ghost" onClick={logout}>
@@ -173,7 +183,7 @@ export default function Admin() {
         <div className="stats admin-stats">
           <div>
             <strong>{stats.events}</strong>
-            <span>Events</span>
+            <span>Decoration entries</span>
           </div>
 
           <div>
@@ -188,7 +198,7 @@ export default function Admin() {
 
           <div>
             <strong>{stats.newInquiries}</strong>
-            <span>New</span>
+            <span>New enquiries</span>
           </div>
         </div>
       )}
@@ -198,7 +208,7 @@ export default function Admin() {
           className={tab === "events" ? "chip on" : "chip"}
           onClick={() => setTab("events")}
         >
-          Events
+          Decoration Work
         </button>
 
         <button
@@ -212,7 +222,11 @@ export default function Admin() {
       {tab === "events" && (
         <div className="admin-split">
           <form className="form compact" onSubmit={saveEvent}>
-            <h2>{editing ? "Edit event" : "New event"}</h2>
+            <h2>
+              {editing
+                ? "Edit decoration work"
+                : "Add decoration work"}
+            </h2>
 
             <label>
               Title
@@ -220,20 +234,21 @@ export default function Admin() {
                 name="title"
                 value={form.title}
                 onChange={update}
+                placeholder="e.g. Elegant Haldi Decoration"
                 required
               />
             </label>
 
             <label>
-              Type
+              Decoration type
               <select
                 name="type"
                 value={form.type}
                 onChange={update}
               >
-                <option>Wedding</option>
-                <option>Birthday</option>
-                <option>Kitty Party</option>
+                <option>Wedding Function</option>
+                <option>Birthday Decoration</option>
+                <option>Kitty Party Decoration</option>
                 <option>All Kinds of Parties</option>
               </select>
             </label>
@@ -267,13 +282,13 @@ export default function Admin() {
                 name="location"
                 value={form.location}
                 onChange={update}
-                placeholder="e.g. Lucknow"
+                placeholder="e.g. Gomti Nagar, Lucknow"
                 required
               />
             </label>
 
             <label>
-              Guest capacity
+              Guest count
               <input
                 name="capacity"
                 value={form.capacity}
@@ -293,30 +308,32 @@ export default function Admin() {
             </label>
 
             <label className="full">
-              Summary
+              Short description
               <textarea
                 name="summary"
                 rows="2"
                 value={form.summary}
                 onChange={update}
-                placeholder="Short description of the event"
+                placeholder="Briefly describe the decoration setup"
               />
             </label>
 
             <label className="full">
-              Description
+              Detailed description
               <textarea
                 name="description"
                 rows="4"
                 value={form.description}
                 onChange={update}
-                placeholder="Detailed description of the event"
+                placeholder="Describe the theme, decor elements, colours, backdrop, flowers, balloons, etc."
               />
             </label>
 
             <div className="row-actions">
               <button className="btn" type="submit">
-                {editing ? "Update event" : "Create event"}
+                {editing
+                  ? "Update decoration"
+                  : "Add decoration"}
               </button>
 
               {editing && (
@@ -345,7 +362,7 @@ export default function Admin() {
             <table>
               <thead>
                 <tr>
-                  <th>Event</th>
+                  <th>Decoration work</th>
                   <th>Date</th>
                   <th></th>
                 </tr>
@@ -388,7 +405,7 @@ export default function Admin() {
 
             {events.length === 0 && (
               <p className="muted">
-                No events have been added yet.
+                No decoration work has been added yet.
               </p>
             )}
           </div>
@@ -401,7 +418,7 @@ export default function Admin() {
             <thead>
               <tr>
                 <th>From</th>
-                <th>Event</th>
+                <th>Decoration</th>
                 <th>Status</th>
                 <th></th>
               </tr>
@@ -472,7 +489,7 @@ export default function Admin() {
 
           {inquiries.length === 0 && (
             <p className="muted">
-              No enquiries have been received yet.
+              No decoration enquiries have been received yet.
             </p>
           )}
         </div>
