@@ -12,11 +12,6 @@ npm run dev
 - Site: http://localhost:5173
 - API: http://localhost:5050
 
-## Admin
-
-- URL: http://localhost:5173/admin
-- Email: `admin@vespera.events`
-- Password: `vespera2026`
 
 ## Stack
 
