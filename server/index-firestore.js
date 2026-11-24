@@ -404,7 +404,17 @@ app.post("/api/inquiries", async (req, res) => {
    Admin authentication
    Protected by rate limiting
 ----------------------------- */
+app.use("/api/auth/login", (req, res, next) => {
+  console.log("[RATE LIMIT DEBUG]", {
+    ip: req.ip,
+    ips: req.ips,
+    forwardedFor: req.headers["x-forwarded-for"],
+    remoteAddress: req.socket.remoteAddress,
+    trustProxy: app.get("trust proxy")
+  });
 
+  next();
+});
 app.post("/api/auth/login", loginLimiter, (req, res) => {
   const email = String(req.body?.email || "")
     .trim()
