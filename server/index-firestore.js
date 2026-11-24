@@ -1,11 +1,12 @@
-
 require("dotenv").config();
 
 const express = require("express");
+const { rateLimit } = require("express-rate-limit");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const path = require("path");
 const fs = require("fs");
+const { randomUUID } = require("crypto");
 
 const {
   getAll,
@@ -15,13 +16,14 @@ const {
   remove
 } = require("./firestoreStore");
 
-const { randomUUID } = require("crypto");
-
 function id() {
   return randomUUID();
 }
 
 const app = express();
+if (process.env.RENDER === "true") {
+  app.set("trust proxy", 1);
+}
 const PORT = process.env.PORT || 5050;
 
 /* -----------------------------
@@ -46,13 +48,13 @@ if (!JWT_SECRET || !ADMIN_EMAIL || !ADMIN_PASSWORD) {
   console.error(
     "ERROR: JWT_SECRET, ADMIN_EMAIL and ADMIN_PASSWORD are required in production."
   );
+
   process.exit(1);
 }
 
 /* -----------------------------
    Middleware
 ----------------------------- */
-
 
 const allowedOrigins = [
   "http://localhost:5173",
@@ -69,12 +71,30 @@ app.use(
         return callback(null, true);
       }
 
-      return callback(new Error("Origin not allowed by CORS"));
+      return callback(
+        new Error("Origin not allowed by CORS")
+      );
     }
   })
 );
 
 app.use(express.json());
+
+/* -----------------------------
+   Admin login rate limiting
+----------------------------- */
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: true,
+
+  message: {
+    error: "Too many login attempts. Please try again after 15 minutes."
+  }
+});
 
 /* -----------------------------
    Authentication
@@ -95,6 +115,7 @@ function auth(req, res, next) {
 
   try {
     req.user = jwt.verify(token, JWT_SECRET);
+
     next();
   } catch {
     return res.status(401).json({
@@ -135,6 +156,7 @@ function isValidDate(date) {
   }
 
   const today = new Date();
+
   today.setHours(0, 0, 0, 0);
 
   return selected >= today;
@@ -156,6 +178,7 @@ app.get("/api/services", async (_req, res) => {
     res.json(await getAll("services"));
   } catch (error) {
     console.error("Services error:", error);
+
     res.status(500).json({
       error: "Unable to load services."
     });
@@ -167,6 +190,7 @@ app.get("/api/testimonials", async (_req, res) => {
     res.json(await getAll("testimonials"));
   } catch (error) {
     console.error("Testimonials error:", error);
+
     res.status(500).json({
       error: "Unable to load testimonials."
     });
@@ -178,6 +202,7 @@ app.get("/api/gallery", async (_req, res) => {
     res.json(await getAll("gallery"));
   } catch (error) {
     console.error("Gallery error:", error);
+
     res.status(500).json({
       error: "Unable to load gallery."
     });
@@ -187,6 +212,7 @@ app.get("/api/gallery", async (_req, res) => {
 app.get("/api/events", async (req, res) => {
   try {
     const { status } = req.query;
+
     let events = await getAll("events");
 
     if (status) {
@@ -196,12 +222,15 @@ app.get("/api/events", async (req, res) => {
     }
 
     events.sort((a, b) =>
-      String(a.date || "").localeCompare(String(b.date || ""))
+      String(a.date || "").localeCompare(
+        String(b.date || "")
+      )
     );
 
     res.json(events);
   } catch (error) {
     console.error("Events error:", error);
+
     res.status(500).json({
       error: "Unable to load events."
     });
@@ -210,7 +239,10 @@ app.get("/api/events", async (req, res) => {
 
 app.get("/api/events/:eventId", async (req, res) => {
   try {
-    const event = await getById("events", req.params.eventId);
+    const event = await getById(
+      "events",
+      req.params.eventId
+    );
 
     if (!event) {
       return res.status(404).json({
@@ -221,6 +253,7 @@ app.get("/api/events/:eventId", async (req, res) => {
     res.json(event);
   } catch (error) {
     console.error("Event detail error:", error);
+
     res.status(500).json({
       error: "Unable to load event."
     });
@@ -244,11 +277,19 @@ app.post("/api/inquiries", async (req, res) => {
     } = req.body || {};
 
     const cleanName = String(name || "").trim();
-    const cleanEmail = String(email || "").trim().toLowerCase();
+
+    const cleanEmail = String(email || "")
+      .trim()
+      .toLowerCase();
+
     const cleanPhone = String(phone || "").trim();
+
     const cleanEventType = String(eventType || "").trim();
+
     const cleanDate = String(date || "").trim();
+
     const cleanGuests = String(guests || "").trim();
+
     const cleanMessage = String(message || "").trim();
 
     if (!cleanName) {
@@ -349,8 +390,10 @@ app.post("/api/inquiries", async (req, res) => {
       ok: true,
       id: inquiry.id
     });
+
   } catch (error) {
     console.error("Inquiry creation error:", error);
+
     res.status(500).json({
       error: "Unable to submit your enquiry. Please try again."
     });
@@ -359,9 +402,10 @@ app.post("/api/inquiries", async (req, res) => {
 
 /* -----------------------------
    Admin authentication
+   Protected by rate limiting
 ----------------------------- */
 
-app.post("/api/auth/login", (req, res) => {
+app.post("/api/auth/login", loginLimiter, (req, res) => {
   const email = String(req.body?.email || "")
     .trim()
     .toLowerCase();
@@ -418,8 +462,10 @@ app.get("/api/admin/stats", auth, async (_req, res) => {
         (inquiry) => inquiry.status === "new"
       ).length
     });
+
   } catch (error) {
     console.error("Admin stats error:", error);
+
     res.status(500).json({
       error: "Unable to load dashboard statistics."
     });
@@ -441,8 +487,10 @@ app.get("/api/admin/inquiries", auth, async (_req, res) => {
     );
 
     res.json(inquiries);
+
   } catch (error) {
     console.error("Admin inquiries error:", error);
+
     res.status(500).json({
       error: "Unable to load enquiries."
     });
@@ -490,8 +538,10 @@ app.patch(
       }
 
       res.json(inquiry);
+
     } catch (error) {
       console.error("Inquiry update error:", error);
+
       res.status(500).json({
         error: "Unable to update enquiry."
       });
@@ -518,8 +568,10 @@ app.delete(
       res.json({
         ok: true
       });
+
     } catch (error) {
       console.error("Inquiry deletion error:", error);
+
       res.status(500).json({
         error: "Unable to delete enquiry."
       });
@@ -553,24 +605,35 @@ app.post("/api/admin/events", auth, async (req, res) => {
 
     const event = {
       id: id(),
+
       title: String(title).trim(),
+
       type: String(type || "Wedding Function").trim(),
+
       status: status === "past" ? "past" : "upcoming",
+
       date: String(date).trim(),
+
       location: String(location).trim(),
+
       capacity: Number(capacity) || 0,
+
       image:
         String(image || "").trim() ||
         "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1400&q=80",
+
       summary: String(summary || "").trim(),
+
       description: String(description || "").trim()
     };
 
     await create("events", event);
 
     res.status(201).json(event);
+
   } catch (error) {
     console.error("Event creation error:", error);
+
     res.status(500).json({
       error: "Unable to create event."
     });
@@ -636,8 +699,10 @@ app.put(
       );
 
       res.json(event);
+
     } catch (error) {
       console.error("Event update error:", error);
+
       res.status(500).json({
         error: "Unable to update event."
       });
@@ -664,8 +729,10 @@ app.delete(
       res.json({
         ok: true
       });
+
     } catch (error) {
       console.error("Event deletion error:", error);
+
       res.status(500).json({
         error: "Unable to delete event."
       });
