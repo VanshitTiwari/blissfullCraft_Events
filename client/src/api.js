@@ -1,4 +1,9 @@
+
 const TOKEN_KEY = "blisscraft_token";
+
+const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL || ""
+).replace(/\/$/, "");
 
 export function getToken() {
   return localStorage.getItem(TOKEN_KEY);
@@ -28,7 +33,9 @@ export async function api(
     }
   }
 
-  const res = await fetch(path, {
+  const url = `${API_BASE_URL}${path}`;
+
+  const res = await fetch(url, {
     method,
     headers,
     body: body ? JSON.stringify(body) : undefined

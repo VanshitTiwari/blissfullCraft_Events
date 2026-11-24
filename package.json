@@ -1,3 +1,4 @@
+
 {
   "name": "blisscraft-events",
   "version": "1.0.0",
@@ -5,9 +6,9 @@
   "description": "Full-stack event organiser website for BlissCraft Events",
   "scripts": {
     "dev": "concurrently -n api,web -c cyan,magenta \"npm run server\" \"npm run client\"",
-    "server": "node server/index.js",
-    "start": "node server/index.js",
-    "client": "npm.cmd --prefix ./client run dev",
+    "server": "node server/index-firestore.js",
+    "start": "node server/index-firestore.js",
+    "client": "npm --prefix ./client run dev",
     "install:all": "npm install && npm install --prefix client",
     "build": "npm run build --prefix client"
   },
@@ -15,6 +16,7 @@
     "cors": "^2.8.5",
     "dotenv": "^18.0.6",
     "express": "^4.21.2",
+    "firebase-admin": "^14.5.1",
     "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
