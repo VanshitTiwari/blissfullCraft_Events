@@ -59,17 +59,11 @@ export default function Layout() {
               Serving
             </p>
 
-            <p>
-              Gomti Nagar · Hazratganj
-            </p>
+            <p>Gomti Nagar · Hazratganj</p>
 
-            <p>
-              Aliganj · Indira Nagar
-            </p>
+            <p>Aliganj · Indira Nagar</p>
 
-            <p>
-              Alambagh · Lucknow
-            </p>
+            <p>Alambagh · Lucknow</p>
           </div>
 
           <div>
@@ -77,13 +71,9 @@ export default function Layout() {
               Contact
             </p>
 
-            <p>
-              7080358105
-            </p>
+            <p>7080358105</p>
 
-            <p>
-              9696447441
-            </p>
+            <p>9696447441</p>
 
             <a
               href="https://www.instagram.com/solosiren/"
@@ -102,12 +92,6 @@ export default function Layout() {
             <p>
               <NavLink to="/contact">
                 Start an enquiry
-              </NavLink>
-            </p>
-
-            <p>
-              <NavLink to="/admin">
-                Client / admin
               </NavLink>
             </p>
           </div>
